@@ -10,6 +10,10 @@ const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
 const userRoutes = require('./routes/users');
 
+const { authenticate } = require('./middleware/auth');
+const { enrichUser } = require('./middleware/enrichUser'); // Se você criou
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -43,9 +47,9 @@ app.get('/health', (req, res) => {
 
 // Rotas
 app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/products', authenticate, productRoutes);
+app.use('/api/orders', authenticate, orderRoutes); 
+app.use('/api/users', authenticate, userRoutes); 
 
 // Rota não encontrada
 app.use('*', (req, res) => {

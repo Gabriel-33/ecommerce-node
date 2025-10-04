@@ -28,6 +28,12 @@ const register = async (req, res) => {
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name: full_name,
+          role: 'customer' // ← ADICIONA ROLE NO USER METADATA
+        }
+      }
     });
 
     if (authError) {
@@ -188,15 +194,20 @@ const login = async (req, res) => {
       });
     }
 
-    // Buscar perfil completo do usuário
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('*')
+      .select('role, full_name')
       .eq('id', data.user.id)
       .single();
-
-    if (profileError) {
-      console.error('Erro ao buscar perfil:', profileError);
+      
+    // Atualizar user_metadata com role atual
+    if (profile && !data.user.user_metadata.role) {
+      await supabase.auth.updateUser({
+        data: { 
+          role: profile.role,
+          full_name: profile.full_name 
+        }
+      });
     }
 
     res.json({
