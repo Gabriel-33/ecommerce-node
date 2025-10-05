@@ -80,8 +80,12 @@ const createOrder = async (req, res) => {
 
     // Chamar Edge Function para email de confirmação (opcional)
     try {
-      await supabase.functions.invoke('send-order-confirmation', {
-        body: { order_id: order.id }
+      await supabase.functions.invoke('send-email', {
+        body: { 
+          to: `gabrielennos33@gmail.com`, // você precisa ter este email
+          subject: `Confirmação do Pedido #${order.id}`,
+          html: `<h1>Pedido #${order.id} confirmado!</h1>` // HTML do email
+        }
       });
     } catch (emailError) {
       console.warn('Email confirmation failed:', emailError);
@@ -105,8 +109,6 @@ const getUserOrders = async (req, res) => {
     const offset = (page - 1) * limit;
     const customer_id = req.user.id;
 
-    console.log(`📦 Buscando pedidos - Usuário: ${customer_id}, Página: ${page}, Limit: ${limit}, Status: ${status}`);
-
     let query = supabase
     .from('orders')
     .select('*', { count: 'exact' })
@@ -122,11 +124,11 @@ const getUserOrders = async (req, res) => {
     const { data: orders, error, count } = await query;
     
     if (error) {
-      console.error('❌ Erro Supabase:', error);
+      console.error('Erro Supabase:', error);
       return res.status(400).json({ error: error.message });
     }
     
-    console.log(`✅ Pedidos encontrados: ${orders?.length || 0} de ${count} total`);
+    console.log(`Pedidos encontrados: ${orders?.length || 0} de ${count} total`);
 
     // Se não há pedidos, retorna array vazio com paginação
     res.json({
@@ -140,7 +142,7 @@ const getUserOrders = async (req, res) => {
     });
     
   } catch (error) {
-    console.error('💥 Erro no getUserOrders:', error);
+    console.error('Erro no getUserOrders:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };

@@ -15,4 +15,18 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // Cliente admin para operações privilegiadas
 const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
-module.exports = { supabase, supabaseAdmin };
+// NOVO: Função para criar cliente autenticado com token
+const createAuthenticatedClient = (accessToken) => {
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    },
+    auth: {
+      persistSession: false
+    }
+  });
+};
+
+module.exports = { supabase, supabaseAdmin, createAuthenticatedClient };

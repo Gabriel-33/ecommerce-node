@@ -4,7 +4,7 @@ const register = async (req, res) => {
   try {
     const { email, password, full_name } = req.body;
 
-    console.log('🚀 Iniciando registro para:', email);
+    console.log('Iniciando registro para:', email);
 
     // 1. Primeiro verificar se o email já existe na tabela profiles
     const { data: existingProfiles, error: checkError } = await supabase
@@ -14,7 +14,7 @@ const register = async (req, res) => {
       .limit(1);
 
     if (checkError) {
-      console.error('❌ Erro ao verificar email:', checkError);
+      console.error('Erro ao verificar email:', checkError);
     }
 
     if (existingProfiles && existingProfiles.length > 0) {
@@ -37,14 +37,14 @@ const register = async (req, res) => {
     });
 
     if (authError) {
-      console.error('❌ Erro no Auth:', authError);
+      console.error('Erro no Auth:', authError);
       return res.status(400).json({ 
         error: 'Erro ao criar usuário',
         details: authError.message 
       });
     }
 
-    console.log('✅ Usuário Auth criado:', authData.user?.id);
+    console.log('Usuário Auth criado:', authData.user?.id);
 
     // 3. Criar perfil - AGORA COM POLÍTICAS CORRETAS
     if (authData.user) {
@@ -60,7 +60,7 @@ const register = async (req, res) => {
         ]);
 
       if (profileError) {
-        console.error('❌ Erro ao criar perfil:', profileError);
+        console.error('Erro ao criar perfil:', profileError);
         
         // Tentar método alternativo usando supabaseAdmin (service role)
         try {
@@ -79,7 +79,7 @@ const register = async (req, res) => {
             throw adminError;
           }
           
-          console.log('✅ Perfil criado via Service Role');
+          console.log('Perfil criado via Service Role');
         } catch (adminError) {
           return res.status(400).json({ 
             error: 'Erro ao criar perfil do usuário',
@@ -88,12 +88,12 @@ const register = async (req, res) => {
           });
         }
       } else {
-        console.log('✅ Perfil criado com sucesso');
+        console.log('Perfil criado com sucesso');
       }
     }
 
     res.status(201).json({
-      message: 'Usuário registrado com sucesso! ✅',
+      message: 'Usuário registrado com sucesso!',
       user: {
         id: authData.user.id,
         email: authData.user.email,
@@ -102,7 +102,7 @@ const register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 ERRO GRAVE no registro:', error);
+    console.error('ERRO GRAVE no registro:', error);
     res.status(500).json({ 
       error: 'Erro interno do servidor',
       ...(process.env.NODE_ENV === 'development' && { details: error.message })

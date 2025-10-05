@@ -1,4 +1,4 @@
-const { supabase } = require('../config/supabase');
+const { supabase,createAuthenticatedClient } = require('../config/supabase');
 
 // Middleware authenticate CORRIGIDO
 const authenticate = async (req, res, next) => {
@@ -8,6 +8,8 @@ const authenticate = async (req, res, next) => {
     if (!token) {
       return res.status(401).json({ error: 'Token não fornecido' });
     }
+    
+    const supabaseAuth = createAuthenticatedClient(token);
 
     // Verifique o token com o Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token);
@@ -19,7 +21,7 @@ const authenticate = async (req, res, next) => {
     // Configure o usuário para as queries SQL
     req.user = user;
     
-    // ✅ IMPORTANTE: Configure o contexto de autenticação para o Supabase
+    // IMPORTANTE: Configure o contexto de autenticação para o Supabase
     // Isso faz com que auth.uid() funcione nas políticas RLS
     const { data: session } = await supabase.auth.setSession({
       access_token: token,
