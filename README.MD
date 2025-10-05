@@ -76,6 +76,7 @@ npm install
 ```
 
 ### 2. Execute o sql no superbase
+Vá até o arquivo schema.sql e rode no seu supabase
 
 ### 3. Crie um arquivo .env na raiz do projeto:
 # Supabase Configuration
