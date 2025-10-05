@@ -4,7 +4,7 @@ const {
   getProductById, 
   createProduct, 
   updateProduct, 
-  deleteProduct 
+  deleteProduct
 } = require('../controllers/productController');
 const { authenticate, requireAdmin } = require('../middleware/auth');
 const { validateProduct } = require('../middleware/validation');

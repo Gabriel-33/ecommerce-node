@@ -13,8 +13,8 @@ const { validateOrder, validateOrderStatus } = require('../middleware/validation
 const router = express.Router();
 
 // Rotas para usuários autenticados
-router.post('/', authenticate, validateOrder, createOrder);
-router.get('/my-orders', authenticate, getUserOrders);
+router.post('/create-order', authenticate, validateOrder, createOrder);
+router.get('/list-orders', authenticate, getUserOrders);
 router.get('/:id', authenticate, getOrderById);
 router.patch('/:id/cancel', authenticate, cancelOrder);
 

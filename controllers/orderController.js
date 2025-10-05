@@ -105,18 +105,14 @@ const getUserOrders = async (req, res) => {
     const offset = (page - 1) * limit;
     const customer_id = req.user.id;
 
+    console.log(`📦 Buscando pedidos - Usuário: ${customer_id}, Página: ${page}, Limit: ${limit}, Status: ${status}`);
+
     let query = supabase
-      .from('orders')
-      .select(`
-        *,
-        order_items(
-          *,
-          products(name)
-        )
-      `, { count: 'exact' })
-      .eq('customer_id', customer_id)
-      .range(offset, offset + limit - 1)
-      .order('created_at', { ascending: false });
+    .from('orders')
+    .select('*', { count: 'exact' })
+    .eq('customer_id', customer_id)
+    .range(offset, offset + limit - 1)
+    .order('created_at', { ascending: false });
 
     // Filtro por status
     if (status) {
@@ -124,22 +120,27 @@ const getUserOrders = async (req, res) => {
     }
 
     const { data: orders, error, count } = await query;
-
+    
     if (error) {
+      console.error('❌ Erro Supabase:', error);
       return res.status(400).json({ error: error.message });
     }
+    
+    console.log(`✅ Pedidos encontrados: ${orders?.length || 0} de ${count} total`);
 
+    // Se não há pedidos, retorna array vazio com paginação
     res.json({
-      orders,
+      orders: orders || [],
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
-        total: count,
-        totalPages: Math.ceil(count / limit)
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit)
       }
     });
+    
   } catch (error) {
-    console.error('Get user orders error:', error);
+    console.error('💥 Erro no getUserOrders:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
