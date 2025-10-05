@@ -41,25 +41,26 @@ Backend completo para sistema de e-commerce construído com Node.js, Express e S
 ## 🏗️ Estrutura do Projeto
 ecommerce-backend/
 ├── config/
-│ └── supabase.js # Configuração do Supabase
+│   └── supabase.js          # Configuração do Supabase
 ├── controllers/
-│ ├── authController.js # Autenticação
-│ ├── productController.js # Produtos
-│ ├── orderController.js # Pedidos
-│ └── userController.js # Usuários
+│   ├── authController.js     # Autenticação
+│   ├── productController.js  # Produtos
+│   ├── orderController.js    # Pedidos
+│   └── userController.js     # Usuários
 ├── middleware/
-│ ├── auth.js # Middleware de auth
-│ └── validation.js # Validação de dados
+│   ├── auth.js              # Middleware de auth
+│   └── validation.js        # Validação de dados
+│   └── enrichUser.js        # Validação de dados
 ├── routes/
-│ ├── auth.js # Rotas de autenticação
-│ ├── products.js # Rotas de produtos
-│ ├── orders.js # Rotas de pedidos
-│ └── users.js # Rotas de usuários
-├── .env # Variáveis de ambiente
-├── .gitignore # Arquivos ignorados pelo Git
-├── package.json # Dependências do projeto
-└── server.js # Servidor principal
-
+│   ├── auth.js              # Rotas de autenticação
+│   ├── products.js          # Rotas de produtos
+│   ├── orders.js            # Rotas de pedidos
+│   └── users.js             # Rotas de usuários
+├── .env                     # Variáveis de ambiente
+├── .gitignore              # Arquivos ignorados pelo Git
+├── package.json            # Dependências do projeto
+└── server.js               # Servidor principal
+└── schema.sql               # Sql usado na api
 
 ## ⚙️ Configuração
 
